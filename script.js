@@ -8,21 +8,21 @@ $("#search-button").on("click", function() {//#search-button grabs a value from 
     $(".history").append(li);
   }
 
+  var APIKEY = 'b550bdc7e893c3cc180911fb8363a8af';
   
 
   function searchDailyForecast(searchCity) {
       //this API key is unique to your openweather account
-      var APIKEY = "b550bdc7e893c3cc180911fb8363a8af"
-​
+    var queryUrl = `https://api.openweathermap.org/data/2.5/weather?q=${searchCity}&APPID=${APIKEY}&units=imperial`;
     $.ajax({
         //breaking apart API url
   //base api url -> "http://api.openweathermap.org/data/2.5/weather"
   // begin API query -> "?q=" + searchterm
   //add your api key to url -> "&appid=" + key
   //additional parameters added with "&" -> ex. &units=imperial
-      url: "http://api.openweathermap.org/data/2.5/weather?q=" + searchCity + "&appid=" + APIKEY + "&units=imperial",
-      method: "GET", //once we have our url, get the data object blob that makes available all the info we want
-​
+      url: queryUrl,
+      method: "GET" //once we have our url, get the data object blob that makes available all the info we want
+
      }).then( function(responseData) { //"responseData" is  the entire data object blob returned from weather aPI
         
       console.log(responseData) //show weather reponse data in console so we can see how to drill down to data we want
