@@ -26,7 +26,7 @@ $(document).ready(function(){ //document.ready makes sure functions do not autom
   function searchDailyForecast(searchCity) {
       var APIKEY = "b550bdc7e893c3cc180911fb8363a8af"
     $.ajax({
-      url: `http://api.openweathermap.org/data/2.5/weather?q=${searchCity}&appid=b550bdc7e893c3cc180911fb8363a8af&units=imperial`,
+      url: `https://api.openweathermap.org/data/2.5/weather?q=${searchCity}&appid=b550bdc7e893c3cc180911fb8363a8af&units=imperial`,
       method: "GET",
      }).then( function(responseData) { 
         console.log(responseData) 
