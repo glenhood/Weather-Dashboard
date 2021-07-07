@@ -8,7 +8,7 @@
 ​
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-​
+​  <link rel="stylesheet" href="style.css">
   <title>Weather Dashboard</title> 
 </head>
 ​
@@ -34,11 +34,14 @@
           <!-- div for today api call -->
         <div id="today" class="mt-3"></div>
         <!-- div for forecast api call -->
-        <div id="fivedayforecast" class="mt-3"></div>
+        <div class="row mt-4 mr-3"></div>
+        <div class="col-12 forecastcard"></div>
+        <h2 class="row fiveday">5-Day Forecast:</h2>
+        <div id="fivedayforecast"></div>
       </div>
     </div>
   </div>
-​
+​  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
   <script src="script.js"></script>
 </body>

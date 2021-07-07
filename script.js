@@ -1,5 +1,7 @@
-$("#search-button").on("click", function() {//#search-button grabs a value from #search-value input and passes value as var searchCity to searchDailyForecast()
-    var searchCity= $("#search-value").val();
+$(document).ready(function(){ //document.ready makes sure functions do not automatically fire on page loadd and user actually initiates
+  $("#search-button").on("click", function() {//#search-button grabs a value from #search-value input and passes value as var searchCity to searchDailyForecast()
+
+      var searchCity= $("#search-value").val();
     searchDailyForecast(searchCity);
   });
   
@@ -8,61 +10,6 @@ $("#search-button").on("click", function() {//#search-button grabs a value from 
     $(".history").append(li);
   }
 
-  var APIKEY = 'b550bdc7e893c3cc180911fb8363a8af';
-  
-
-  function searchDailyForecast(searchCity) {
-      //this API key is unique to your openweather account
-    var queryUrl = `https://api.openweathermap.org/data/2.5/weather?q=${searchCity}&APPID=${APIKEY}&units=imperial`;
-    $.ajax({
-        //breaking apart API url
-  //base api url -> "http://api.openweathermap.org/data/2.5/weather"
-  // begin API query -> "?q=" + searchterm
-  //add your api key to url -> "&appid=" + key
-  //additional parameters added with "&" -> ex. &units=imperial
-      url: queryUrl,
-      method: "GET" //once we have our url, get the data object blob that makes available all the info we want
-
-     }).then( function(responseData) { //"responseData" is  the entire data object blob returned from weather aPI
-        
-      console.log(responseData) //show weather reponse data in console so we can see how to drill down to data we want
-      
-      
-      // create history link for this search based on history array made at bottom of page
-        if (history.indexOf(searchValue) === -1) {
-          history.push(searchValue);//push each search to localstorage "history" array
-          window.localStorage.setItem("history", JSON.stringify(history));
-    //create a history search row based on search tern
-          makeRow(searchCity);
-        }
-        
-  ;
-
-        // create dynamic html content for current weather
-        //prepend data we want to drill down to with with "responseData"
-        var title = $("<h3>").text(responseData.name + " (" + new Date().toLocaleDateString() + ")");
-        
-        var wind = $("<p>").addClass("card-text").text( responseData.wind.speed + " MPH");
-        var humid = $("<p>").addClass("card-text").text( responseData.main.humidity + "% Humidity");
-        var temp = $("<p>").addClass("card-text").text("Temp" + responseData.main.temp + " °F");//grabbed farenheit  with imperial units
-        var cardBody = $("<div>").addClass("card-body");
-      
-
-        // append and add to page
-    
-        cardBody.append(title, temp, humid, wind);
-       
-        $("#today").append(cardBody);
-
-  
-      }
-    );
-  }
-  
-  
-  
-
-  // on page load get history from local storage, if nothing, leave as empty array
   var history = JSON.parse(window.localStorage.getItem("history")) || [];
 
   //have page disaply latest history search, if any
@@ -73,3 +20,113 @@ $("#search-button").on("click", function() {//#search-button grabs a value from 
   for (var i = 0; i < history.length; i++) {
     makeRow(history[i]);
   }
+
+
+  
+  function searchDailyForecast(searchCity) {
+      var APIKEY = "b550bdc7e893c3cc180911fb8363a8af"
+    $.ajax({
+      url: `http://api.openweathermap.org/data/2.5/weather?q=${searchCity}&appid=b550bdc7e893c3cc180911fb8363a8af&units=imperial`,
+      method: "GET",
+     }).then( function(responseData) { 
+        console.log(responseData) 
+        $('#today').empty()
+        var title = $("<h3>").text(responseData.name + " (" + new Date().toLocaleDateString() + ")");
+        var forcastIcon = $("<img>").attr('src', `http://openweathermap.org/img/wn/${responseData.weather[0].icon}.png`);
+        var wind = $("<p>").addClass("card-text").text( "Wind Speed: " + responseData.wind.speed + " MPH");
+        var humid = $("<p>").addClass("card-text").text("Humidity: " + responseData.main.humidity + "%" );
+        var temp = $("<p>").addClass("card-text").text("Temp: " + responseData.main.temp + " °F");//grabbed farenheit  with imperial units
+        
+        var cardBody = $("<div>").addClass("card-body");
+        
+    cardBody.append(title, forcastIcon, temp, humid, wind);
+       
+    $("#today").append(cardBody);
+    
+    // searchCity = data.name;
+        searchOneCallApi(responseData.coord.lon, responseData.coord.lat);
+        // history(searchCity, false);
+        // console.log(data.coord.lon)
+        
+        if (history.indexOf(searchCity) === -1) {
+          history.push(searchCity);
+          window.localStorage.setItem("history", JSON.stringify(history));
+          makeRow(searchCity);
+        }
+      
+
+      
+        
+        
+        } ) 
+        
+        function searchOneCallApi(longitude, latitude) {
+
+          var APIKEY = "b550bdc7e893c3cc180911fb8363a8af"
+        $.ajax({
+          url: `https://api.openweathermap.org/data/2.5/onecall?units=imperial&lon=${longitude}&lat=${latitude}&appid=b550bdc7e893c3cc180911fb8363a8af`,
+          method: "GET",
+         }).then( function(responseData2) { 
+          console.log(responseData2)
+          
+          console.log(responseData2.current.uvi)
+          var uvIndex = $("<p>").addClass("card-text").css('padding-left', '20px').text("UV Index: " + responseData2.current.uvi)
+          $("#today").append(uvIndex);
+          $("#fivedayforecast").empty();
+          for (let index = 1; responseData2.daily.length = 6; index++) {
+                  var title = $("<h3>").text(" (" + new Date().toLocaleDateString() + ")");
+                  // var forcastIcon = $("<img>").attr('src', `http://openweathermap.org/img/wn/${responseData2.weather[index]}.png`);
+                  var temp = $('<p>').text("Temp: " + responseData2.daily[index].temp.day + " °F")
+                  var humidity = $('<p>').text("Humidity: " + responseData2.daily[index].humidity + "%")
+                  var forcastIcon = $("<img>").attr('src', `http://openweathermap.org/img/wn/${responseData2.daily[index].weather[0].icon}.png`);
+
+                  
+                  var forecastcard = $('<div>').addClass('forecastcard')
+                  
+                  
+                  
+                  
+                  
+                  forecastcard.append(title, forcastIcon, temp, humidity)
+                  $('#fivedayforecast').append(forecastcard)
+              
+                
+
+
+          
+          
+                }
+        
+        
+        
+        
+        
+        
+        
+        })
+        
+        
+      }
+  
+
+        // create dynamic html content for current weather
+        // prepend data we want to drill down to with with "responseData"
+        
+
+      //   function displayWeekForecast(forecastData) {
+      //     // future cards => 5 days, date, icon of weather conditions, temp, wind speed, humidity
+      //     //5 days
+      //     fivedayforecast.html('');
+      //     
+      // }
+
+        // append and add to page
+    
+        
+
+  
+     
+    
+      }
+
+    })

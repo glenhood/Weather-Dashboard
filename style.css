@@ -1,0 +1,15 @@
+#fivedayforecast {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.fiveday {
+    margin-left: 10px;
+}
+
+.forecastcard {
+    border: 1px solid black;
+
+}
