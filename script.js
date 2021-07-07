@@ -1,22 +1,21 @@
-$(document).ready(function(){ //document.ready makes sure functions do not automatically fire on page loadd and user actually initiates
-  $("#search-button").on("click", function() {//#search-button grabs a value from #search-value input and passes value as var searchCity to searchDailyForecast()
+$(document).ready(function(){ 
+  $("#search-button").on("click", function() {
 
       var searchCity= $("#search-value").val();
     searchDailyForecast(searchCity);
   });
   
-   function makeRow(text) {//add to list of previous searches
+   function makeRow(text) {
     var li = $("<li>").text(text);
     $(".history").append(li);
   }
+  
 
   var history = JSON.parse(window.localStorage.getItem("history")) || [];
 
-  //have page disaply latest history search, if any
   if (history.length > 0) {
     searchDailyForecast(history[history.length-1]);
   }
-//create rows based on each searched city in history array
   for (var i = 0; i < history.length; i++) {
     makeRow(history[i]);
   }
@@ -43,11 +42,8 @@ $(document).ready(function(){ //document.ready makes sure functions do not autom
        
     $("#today").append(cardBody);
     
-    // searchCity = data.name;
-        searchOneCallApi(responseData.coord.lon, responseData.coord.lat);
-        // history(searchCity, false);
-        // console.log(data.coord.lon)
-        
+
+        searchOneCallApi(responseData.coord.lon, responseData.coord.lat);        
         if (history.indexOf(searchCity) === -1) {
           history.push(searchCity);
           window.localStorage.setItem("history", JSON.stringify(history));
@@ -62,7 +58,6 @@ $(document).ready(function(){ //document.ready makes sure functions do not autom
         
         function searchOneCallApi(longitude, latitude) {
 
-          var APIKEY = "b550bdc7e893c3cc180911fb8363a8af"
         $.ajax({
           url: `https://api.openweathermap.org/data/2.5/onecall?units=imperial&lon=${longitude}&lat=${latitude}&appid=b550bdc7e893c3cc180911fb8363a8af`,
           method: "GET",
@@ -71,15 +66,15 @@ $(document).ready(function(){ //document.ready makes sure functions do not autom
           
           console.log(responseData2.current.uvi)
           var uvIndex = $("<p>").addClass("card-text").css('padding-left', '20px').text("UV Index: " + responseData2.current.uvi)
-          if (uvIndex > 6) {
-            $("card-text").css('background', '#aa2020')
-        } else if (uvIndex > 4) {
-            $("card-text").css('background', '#aa6a20')
+          if (responseData2.current.uvi > 6) {
+            uvIndex.css('background', '#aa2020')
+        } else if (responseData2.current.uvi > 4) {
+            uvIndex.css('background', '#aa6a20')
         } else {
-            $("card-text").css('background', '#40aa20')
+            uvIndex.css('background', '#40aa20')
         }
     
-        $("card-text").css('display', 'block')
+        $(uvIndex).css('display', 'block', 'margin-right', '751px')
       
   
           $("#today").append(uvIndex);
@@ -119,19 +114,6 @@ $(document).ready(function(){ //document.ready makes sure functions do not autom
       }
   
 
-        // create dynamic html content for current weather
-        // prepend data we want to drill down to with with "responseData"
-        
-
-      //   function displayWeekForecast(forecastData) {
-      //     // future cards => 5 days, date, icon of weather conditions, temp, wind speed, humidity
-      //     //5 days
-      //     fivedayforecast.html('');
-      //     
-      // }
-
-        // append and add to page
-    
         
 
   
