@@ -71,11 +71,21 @@ $(document).ready(function(){ //document.ready makes sure functions do not autom
           
           console.log(responseData2.current.uvi)
           var uvIndex = $("<p>").addClass("card-text").css('padding-left', '20px').text("UV Index: " + responseData2.current.uvi)
+          if (uvIndex > 6) {
+            $("card-text").css('background', '#aa2020')
+        } else if (uvIndex > 4) {
+            $("card-text").css('background', '#aa6a20')
+        } else {
+            $("card-text").css('background', '#40aa20')
+        }
+    
+        $("card-text").css('display', 'block')
+      
+  
           $("#today").append(uvIndex);
           $("#fivedayforecast").empty();
           for (let index = 1; responseData2.daily.length = 6; index++) {
                   var title = $("<h3>").text(" (" + new Date().toLocaleDateString() + ")");
-                  // var forcastIcon = $("<img>").attr('src', `http://openweathermap.org/img/wn/${responseData2.weather[index]}.png`);
                   var temp = $('<p>').text("Temp: " + responseData2.daily[index].temp.day + " °F")
                   var humidity = $('<p>').text("Humidity: " + responseData2.daily[index].humidity + "%")
                   var forcastIcon = $("<img>").attr('src', `http://openweathermap.org/img/wn/${responseData2.daily[index].weather[0].icon}.png`);
