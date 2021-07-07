@@ -1,7 +1,7 @@
 $(document).ready(function(){ 
   $("#search-button").on("click", function() {
 
-      var searchCity= $("#search-value").val();
+      var searchTopic= $("#search-value").val();
     searchDailyForecast(searchCity);
   });
   
@@ -19,11 +19,14 @@ $(document).ready(function(){
   for (var i = 0; i < history.length; i++) {
     makeRow(history[i]);
   }
+  
+  $(".history").on("click", "li", function() {
+    searchCity($(this).text());
+  });
 
 
   
   function searchDailyForecast(searchCity) {
-      var APIKEY = "b550bdc7e893c3cc180911fb8363a8af"
     $.ajax({
       url: `https://api.openweathermap.org/data/2.5/weather?q=${searchCity}&appid=b550bdc7e893c3cc180911fb8363a8af&units=imperial`,
       method: "GET",
@@ -80,7 +83,7 @@ $(document).ready(function(){
           $("#today").append(uvIndex);
           $("#fivedayforecast").empty();
           for (let index = 1; responseData2.daily.length = 6; index++) {
-                  var title = $("<h3>").text(" (" + new Date().toLocaleDateString() + ")");
+                  var title = $("<h3>").text(moment.unix(responseData2.daily[index].dt).format("MM/D/YYYY"))
                   var temp = $('<p>').text("Temp: " + responseData2.daily[index].temp.day + " °F")
                   var humidity = $('<p>').text("Humidity: " + responseData2.daily[index].humidity + "%")
                   var forcastIcon = $("<img>").attr('src', `http://openweathermap.org/img/wn/${responseData2.daily[index].weather[0].icon}.png`);
