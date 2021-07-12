@@ -1,7 +1,7 @@
 $(document).ready(function(){ 
   $("#search-button").on("click", function() {
 
-      var searchTopic= $("#search-value").val();
+      var searchCity= $("#search-value").val();
     searchDailyForecast(searchCity);
   });
   
